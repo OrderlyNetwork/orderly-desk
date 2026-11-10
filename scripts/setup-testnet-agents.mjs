@@ -130,6 +130,9 @@ function save(accounts) {
       accountId: account.accountId,
       publicKey: account.publicKey,
       apiSecretBase64: account.apiSecretBase64,
+      brokerId: account.brokerId ?? BROKER,
+      userId: account.userId ?? null,
+      allocation: account.allocation ?? 1000,
     })),
   };
   const encoded = Buffer.from(JSON.stringify(workerConfig), "utf8").toString("base64");
@@ -249,13 +252,39 @@ async function createAccount(definition) {
     apiSecretBase64,
     publicKey,
     walletPrivateKey: wallet.privateKey,
+    brokerId: BROKER,
+    userId: null,
+    allocation: 1000,
     createdAt: new Date().toISOString(),
   };
+
+  try {
+    const info = await jsonFetch(
+      `${API}/v1/get_account?address=${encodeURIComponent(address)}&broker_id=${BROKER}`,
+    );
+    account.userId = info?.data?.user_id ?? null;
+  } catch {
+    // The account is still usable; the dashboard deep link will be omitted.
+  }
 
   const check = await signedGet(account, "/v1/client/holding");
   if (check?.success !== true) throw new Error(`signed read failed: ${JSON.stringify(check)}`);
 
   return account;
+}
+
+async function hydrateAccount(account) {
+  account.brokerId = account.brokerId ?? BROKER;
+  account.allocation = account.allocation ?? 1000;
+  if (account.userId) return;
+  try {
+    const info = await jsonFetch(
+      `${API}/v1/get_account?address=${encodeURIComponent(account.address)}&broker_id=${account.brokerId}`,
+    );
+    account.userId = info?.data?.user_id ?? null;
+  } catch {
+    // Deep link is optional.
+  }
 }
 
 async function faucet(account) {
@@ -305,6 +334,7 @@ if (!accounts.length) {
   process.exit(1);
 }
 
+await Promise.all(accounts.map(hydrateAccount));
 save(accounts);
 
 // Fund any account with an empty USDC balance. Faucet delivery is asynchronous.

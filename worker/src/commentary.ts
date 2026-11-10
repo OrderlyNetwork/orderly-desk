@@ -1,7 +1,7 @@
 import type { AgentAccount, Env, MarketRow } from "./types";
 import type { StrategyResult } from "./strategies";
 
-const MODEL = "@cf/meta/llama-3.1-8b-instruct";
+const MODEL = "@cf/meta/llama-3.2-3b-instruct";
 
 export interface Commentary {
   text: string;
@@ -46,7 +46,8 @@ export async function generateCommentary(
     const text = response?.response?.trim();
     if (!text) return { text: fallback, source: "rules" };
     return { text: text.slice(0, 260), source: "workers-ai" };
-  } catch {
+  } catch (error) {
+    console.error("Workers AI commentary failed; using rules", error);
     return { text: fallback, source: "rules" };
   }
 }

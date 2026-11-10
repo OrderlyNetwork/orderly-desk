@@ -20,7 +20,13 @@ export interface AgentState {
   equity: number | null;
   balance: number | null;
   initialEquity: number | null;
+  allocation: number;
+  sleeveEquity: number | null;
+  reserve: number | null;
   pnl: number | null;
+  brokerId?: string;
+  userId?: number | null;
+  dashboardUrl: string | null;
   position: AgentPosition | null;
   lastRunAt: number | null;
   lastAction: string | null;

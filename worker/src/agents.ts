@@ -305,11 +305,26 @@ export async function getAgentStates(env: Env, force = false): Promise<AgentStat
   await ensureAgents(env);
   const rows = await env.DB.prepare("SELECT * FROM agents ORDER BY created_at ASC").all<AgentRow>();
   const now = Date.now();
+  const CRON_INTERVAL_MS = 120_000;
+
+  const nextCronAt = (ms: number) => Math.ceil(Math.max(ms, now) / CRON_INTERVAL_MS) * CRON_INTERVAL_MS;
+  const nextRunAt = (agent: AgentRow) =>
+    nextCronAt((agent.last_run_at ?? now) + agent.interval_minutes * 60_000);
+  const dashboardUrl = (account: AgentAccount) => {
+    if (!account.address || !account.brokerId || account.userId == null) return null;
+    const query = new URLSearchParams({
+      broker_id: account.brokerId,
+      user_id: String(account.userId),
+    });
+    return `https://dashboard.orderly.network/address/${account.address}?${query.toString()}`;
+  };
 
   const states = await Promise.all(
     (rows.results ?? []).map(async (agent): Promise<AgentState | null> => {
       const account = accountById(config, agent.id);
       if (!account) return null;
+      const allocation = Number(account.allocation ?? 1000);
+      const link = dashboardUrl(account);
 
       try {
         const [positions, holding] = await Promise.all([
@@ -323,6 +338,8 @@ export async function getAgentStates(env: Env, force = false): Promise<AgentStat
         );
         const position: PositionRow | null = findPosition(positions, agent.symbol);
         const initial = agent.initial_equity;
+        const pnl = initial == null ? null : equity - initial;
+        const sleeveEquity = pnl == null ? null : allocation + pnl;
 
         return {
           id: agent.id,
@@ -332,12 +349,18 @@ export async function getAgentStates(env: Env, force = false): Promise<AgentStat
           description: agent.description,
           accountId: account.accountId,
           address: account.address,
+          brokerId: account.brokerId,
+          userId: account.userId,
+          dashboardUrl: link,
           enabled: agent.enabled === 1,
           intervalMinutes: agent.interval_minutes,
           equity,
           balance,
           initialEquity: initial,
-          pnl: initial == null ? null : equity - initial,
+          allocation,
+          sleeveEquity,
+          reserve: sleeveEquity == null ? null : Math.max(0, equity - sleeveEquity),
+          pnl,
           position: position
             ? {
                 side: Number(position.position_qty) > 0 ? "LONG" : "SHORT",
@@ -352,7 +375,7 @@ export async function getAgentStates(env: Env, force = false): Promise<AgentStat
           lastAction: agent.last_action,
           lastReason: agent.last_reason,
           lastOrderId: agent.last_order_id,
-          nextRunAt: (agent.last_run_at ?? now) + agent.interval_minutes * 60_000,
+          nextRunAt: nextRunAt(agent),
         } satisfies AgentState;
       } catch (error) {
         return {
@@ -363,18 +386,24 @@ export async function getAgentStates(env: Env, force = false): Promise<AgentStat
           description: agent.description,
           accountId: account.accountId,
           address: account.address,
+          brokerId: account.brokerId,
+          userId: account.userId,
+          dashboardUrl: link,
           enabled: agent.enabled === 1,
           intervalMinutes: agent.interval_minutes,
           equity: null,
           balance: null,
           initialEquity: agent.initial_equity,
+          allocation,
+          sleeveEquity: null,
+          reserve: null,
           pnl: null,
           position: null,
           lastRunAt: agent.last_run_at,
           lastAction: agent.last_action,
           lastReason: agent.last_reason,
           lastOrderId: agent.last_order_id,
-          nextRunAt: (agent.last_run_at ?? now) + agent.interval_minutes * 60_000,
+          nextRunAt: nextRunAt(agent),
           error: cleanError(error),
         } satisfies AgentState;
       }
