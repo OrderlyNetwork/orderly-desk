@@ -110,8 +110,8 @@ export async function ensureDailyRecap(
     )
       .bind(start, end)
       .all<{ agent_id: string; name: string | null; action: string; reason: string | null }>(),
-    equityAt(env, start),
-    equityAt(env, end),
+    equityAt(env, start - 1),
+    equityAt(env, end - 1),
     env.DB.prepare("SELECT id, name FROM agents ORDER BY created_at ASC").all<{
       id: string;
       name: string;
