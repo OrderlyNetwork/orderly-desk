@@ -7,11 +7,67 @@ const links = [
   { to: "/reference", label: "Reference" },
 ];
 
-const footerLinks = [
-  { href: "https://orderly.network", label: "Orderly Network" },
-  { href: "https://github.com/OrderlyNetwork/cli", label: "CLI on GitHub" },
-  { href: "https://orderly.network/docs", label: "Documentation" },
+type FooterLink = {
+  label: string;
+  to?: string;
+  href?: string;
+};
+
+const footerColumns: Array<{ title: string; links: FooterLink[] }> = [
+  {
+    title: "Showcase",
+    links: [
+      { label: "Live agents", to: "/dashboard" },
+      { label: "Walkthrough", to: "/walkthrough" },
+      { label: "Command reference", to: "/reference" },
+    ],
+  },
+  {
+    title: "Agents",
+    links: [
+      {
+        label: "Agents API",
+        href: "https://orderly-desk-agents.orderlynetwork.workers.dev/health",
+      },
+      { label: "MCP guide", href: "/mcp.md" },
+      { label: "Agent docs", href: "/llms.txt" },
+      { label: "Version data", href: "/versions.json" },
+    ],
+  },
+  {
+    title: "Orderly",
+    links: [
+      { label: "Orderly Network", href: "https://orderly.network" },
+      { label: "Dashboard", href: "https://dashboard.orderly.network" },
+      { label: "Docs", href: "https://orderly.network/docs" },
+      { label: "CLI on GitHub", href: "https://github.com/OrderlyNetwork/cli" },
+    ],
+  },
 ];
+
+const socialLinks = [
+  { label: "X", href: "https://x.com/OrderlyNetwork" },
+  { label: "Discord", href: "https://discord.com/invite/OrderlyNetwork" },
+  { label: "Telegram", href: "https://t.me/Orderly_Discussions" },
+  { label: "GitHub", href: "https://github.com/OrderlyNetwork" },
+];
+
+function FooterItem({ link }: { link: FooterLink }) {
+  const className =
+    "text-[13px] leading-relaxed text-[#e9deff] transition-colors hover:text-white";
+  if (link.to) {
+    return (
+      <Link to={link.to} className={className}>
+        {link.label}
+      </Link>
+    );
+  }
+  return (
+    <a href={link.href} target="_blank" rel="noreferrer" className={className}>
+      {link.label}
+    </a>
+  );
+}
 
 export default function Layout() {
   return (
@@ -43,7 +99,7 @@ export default function Layout() {
           <div className="ml-auto flex items-center gap-4">
             <span
               className="hidden items-center gap-2 rounded-full border border-white/10 bg-panel/60 px-2.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-muted md:inline-flex"
-              title="All trading in this showcase happens on testnet"
+              title="The demo agents trade testnet; the CLI supports mainnet and testnet"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-gain" aria-hidden="true" />
               Testnet demo
@@ -63,75 +119,99 @@ export default function Layout() {
       </main>
 
       <footer className="pt-14 pb-8">
-        <div className="shell grid gap-8 border-b border-white/10 pb-12 md:grid-cols-[1.4fr_0.5fr_0.5fr] md:gap-12">
-          <div>
-            <div className="flex items-center gap-3">
-              <img src="/orderly-white.svg" alt="Orderly" className="h-[18px] w-auto opacity-95" />
-              <span className="h-4 w-px bg-white/15" aria-hidden="true" />
-              <span className="font-mono text-[12px] uppercase tracking-[0.16em] text-muted">Desk</span>
+        <div className="shell">
+          <div className="rounded-[28px] bg-[#6700ce] p-6 md:p-10">
+            <div className="grid gap-10 lg:grid-cols-[1.05fr_1.95fr]">
+              <div>
+                <div className="flex items-center gap-3">
+                  <img src="/orderly-white.svg" alt="Orderly" className="h-[20px] w-auto" />
+                  <span className="h-5 w-px bg-white/30" aria-hidden="true" />
+                  <span className="font-mono text-[12px] uppercase tracking-[0.16em] text-white/80">
+                    Desk
+                  </span>
+                </div>
+                <p className="mt-4 max-w-[370px] text-[13px] leading-relaxed text-white/75">
+                  A live agentic trading showcase built on the Orderly Network CLI.
+                  Three testnet agents, one read-only desk, and the CLI as the control
+                  plane.
+                </p>
+                <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 font-mono text-[9.5px] uppercase tracking-[0.09em] text-white/85">
+                  <span className="h-1.5 w-1.5 rounded-full bg-gain animate-live" aria-hidden="true" />
+                  3 agents online · testnet
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+                {footerColumns.map((column) => (
+                  <div key={column.title} className="flex flex-col gap-3">
+                    <div className="font-mono text-[10px] uppercase tracking-[0.11em] text-white/55">
+                      {column.title}
+                    </div>
+                    {column.links.map((link) => (
+                      <FooterItem key={link.label} link={link} />
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
-            <p className="mt-4 max-w-[380px] text-[13px] leading-relaxed text-dim">
-              A live agentic trading showcase built on the Orderly Network CLI. The demo
-              agents run on testnet; the CLI itself supports mainnet and testnet.
-            </p>
+
+            <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/15 pt-5">
+              <span className="font-mono text-[9.5px] uppercase tracking-[0.1em] text-white/55">
+                Built on Orderly · CLI + Workers
+              </span>
+              <div className="flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-[0.08em] text-white/70">
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition-colors hover:text-white"
+                  >
+                    {link.label} ↗
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-2.5 text-[13px] text-muted">
-            {footerLinks.map((link) => (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 px-1 font-mono text-[10px] text-dim">
+            <span>© 2026 Orderly Network · showcase</span>
+            <div className="flex flex-wrap items-center gap-4">
               <a
-                key={link.href}
-                href={link.href}
+                href="https://orderly.network/docs/introduction/terms-of-service"
                 target="_blank"
                 rel="noreferrer"
-                className="transition-colors hover:text-ink"
+                className="transition-colors hover:text-muted"
               >
-                {link.label}
+                Terms
               </a>
-            ))}
+              <a
+                href="https://orderly.network/docs/introduction/privacy-policy"
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-muted"
+              >
+                Privacy
+              </a>
+              <a
+                href={versions.cli.url}
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-muted"
+              >
+                orderly {versions.cli.version}
+              </a>
+              <a
+                href={versions.tradingMcp.url}
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-muted"
+              >
+                trading-mcp {versions.tradingMcp.version}
+              </a>
+            </div>
           </div>
-
-          <div className="flex flex-col gap-2.5 text-[13px] text-muted">
-            <Link to="/walkthrough" className="transition-colors hover:text-ink">
-              Walkthrough
-            </Link>
-            <Link to="/dashboard" className="transition-colors hover:text-ink">
-              Agents
-            </Link>
-            <Link to="/reference" className="transition-colors hover:text-ink">
-              Command reference
-            </Link>
-            <a href="/llms.txt" className="transition-colors hover:text-ink">
-              For agents
-            </a>
-            <a href="/mcp.md" className="transition-colors hover:text-ink">
-              MCP guide
-            </a>
-          </div>
-        </div>
-
-        <div className="shell flex flex-col justify-between gap-1.5 pt-5 text-[12px] text-dim sm:flex-row">
-          <span>Testnet demo · no real funds · CLI supports mainnet + testnet</span>
-          <span className="flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono">
-            <a
-              href={versions.cli.url}
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-muted"
-            >
-              orderly {versions.cli.version}
-            </a>
-            <span className="text-white/20" aria-hidden="true">
-              ·
-            </span>
-            <a
-              href={versions.tradingMcp.url}
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-muted"
-            >
-              trading-mcp {versions.tradingMcp.version}
-            </a>
-          </span>
         </div>
       </footer>
     </div>
