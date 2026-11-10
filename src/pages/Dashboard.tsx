@@ -19,8 +19,9 @@ import { cn, fmtClock, marketLabel } from "../lib/format";
 import type { Interval, Network } from "../lib/types";
 
 export default function Dashboard() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const initialMarket = searchParams.get("market") || "PERP_BTC_USDC";
+  const selectedId = searchParams.get("agent");
 
   const [network, setNetwork] = useState<Network>("mainnet");
   const [symbol, setSymbol] = useState(initialMarket.toUpperCase());
@@ -28,6 +29,17 @@ export default function Dashboard() {
 
   const fleet = useAgentFleet();
   const activity = useAgentDecisions(40);
+  const selectedAgent = (fleet.data ?? []).find((agent) => agent.id === selectedId) ?? null;
+  const decisions = selectedId
+    ? (activity.data ?? []).filter((decision) => decision.agent_id === selectedId)
+    : activity.data ?? [];
+
+  const selectAgent = (id: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (id) next.set("agent", id);
+    else next.delete("agent");
+    setSearchParams(next, { replace: true });
+  };
 
   const marketsState = useMarkets(network);
   const { options, error, updatedAt } = marketsState;
@@ -81,8 +93,45 @@ export default function Dashboard() {
           error={fleet.error}
           configured={fleet.configured}
           updatedAt={fleet.updatedAt}
+          selectedId={selectedId}
+          onSelect={selectAgent}
         />
       </div>
+
+      {selectedAgent ? (
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-accent/25 bg-accent/[0.05] px-4 py-3">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[10px] uppercase tracking-[0.07em]">
+            <span className="text-accent">focused on {selectedAgent.name}</span>
+            <span className="text-dim">{selectedAgent.accountId.slice(0, 8)}…</span>
+            {selectedAgent.position ? (
+              <span className="text-muted">
+                {selectedAgent.position.side} {selectedAgent.position.quantity} BTC
+              </span>
+            ) : (
+              <span className="text-muted">flat</span>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            {selectedAgent.dashboardUrl ? (
+              <a
+                href={selectedAgent.dashboardUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="font-mono text-[9.5px] uppercase tracking-[0.08em] text-accent transition hover:text-[#b9a0ff]"
+              >
+                Orderly dashboard ↗
+              </a>
+            ) : null}
+            <button
+              type="button"
+              onClick={() => selectAgent("")}
+              className="rounded-md border border-white/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.08em] text-dim transition hover:text-ink"
+            >
+              show all
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       <div className="mt-7 flex flex-wrap items-center gap-3">
         <label className="relative inline-flex items-center">
@@ -180,9 +229,10 @@ export default function Dashboard() {
 
           <div className="min-w-0 space-y-4">
             <ActivityFeed
-              decisions={activity.data ?? []}
+              decisions={decisions}
               agents={fleet.data ?? []}
               loading={activity.loading}
+              filterName={selectedAgent?.name}
             />
             <TradeTape trades={trades.trades} status={trades.status} />
             <Panel title="Wiring" bodyClassName="px-4 pb-3 pt-2.5">

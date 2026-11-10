@@ -12,18 +12,52 @@ function shortId(value: string): string {
   return value.length > 12 ? `${value.slice(0, 6)}…${value.slice(-4)}` : value;
 }
 
-export default function AgentCard({ agent }: { agent: AgentState }) {
+export default function AgentCard({
+  agent,
+  selected = false,
+  dimmed = false,
+  onSelect,
+}: {
+  agent: AgentState;
+  selected?: boolean;
+  dimmed?: boolean;
+  onSelect?: (id: string) => void;
+}) {
   const now = useNow(1_000);
   const nextRun = agent.nextRunAt ? Math.max(0, agent.nextRunAt - now) : 0;
+  const due = Boolean(agent.nextRunAt && nextRun <= 0);
   const running = agent.enabled && !agent.error && agent.lastAction !== "ERROR";
   const reasonText = (agent.error ?? agent.lastReason ?? "The first scheduled check will appear here.")
     .replace(/<[^>]*>/g, " ")
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 180);
+  const displayEquity = agent.sleeveEquity ?? agent.equity;
+
+  const select = () => onSelect?.(agent.id);
 
   return (
-    <article className="flex min-h-[280px] flex-col rounded-[14px] border border-white/10 bg-gradient-to-b from-panel-2/70 to-panel/70 p-4 transition hover:border-accent/35">
+    <article
+      onClick={select}
+      onKeyDown={(event) => {
+        if (!onSelect || event.target !== event.currentTarget) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          select();
+        }
+      }}
+      role={onSelect ? "button" : undefined}
+      tabIndex={onSelect ? 0 : undefined}
+      aria-pressed={onSelect ? selected : undefined}
+      className={cn(
+        "relative flex min-h-[280px] flex-col rounded-[14px] border bg-gradient-to-b from-panel-2/70 to-panel/70 p-4 transition",
+        onSelect && "cursor-pointer",
+        selected
+          ? "border-accent/60 ring-1 ring-accent/25"
+          : "border-white/10 hover:border-accent/35",
+        dimmed && "opacity-60",
+      )}
+    >
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
@@ -47,9 +81,11 @@ export default function AgentCard({ agent }: { agent: AgentState }) {
 
       <div className="mt-4 flex items-end justify-between gap-3">
         <div>
-          <div className="font-mono text-[9px] uppercase tracking-[0.08em] text-dim">equity</div>
+          <div className="font-mono text-[9px] uppercase tracking-[0.08em] text-dim">
+            allocated equity
+          </div>
           <div className="mt-0.5 font-mono text-[22px] leading-none text-ink">
-            {fmtUsd(agent.equity)}
+            {fmtUsd(displayEquity)}
           </div>
         </div>
         <div className="text-right">
@@ -102,9 +138,29 @@ export default function AgentCard({ agent }: { agent: AgentState }) {
 
       <div className="mt-auto flex items-center justify-between gap-2 border-t border-white/[0.06] pt-2.5 font-mono text-[9px] uppercase tracking-[0.07em] text-dim">
         <span>next check</span>
-        <span className={cn(nextRun < 30_000 ? "text-warn" : "text-muted")}>{fmtCountdown(nextRun)}</span>
+        <span className={cn(due ? "text-warn" : nextRun < 30_000 ? "text-warn" : "text-muted")}>
+          {due ? "due" : fmtCountdown(nextRun)}
+        </span>
         <span title={agent.accountId}>{shortId(agent.accountId)}</span>
       </div>
+
+      {agent.dashboardUrl ? (
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <a
+            href={agent.dashboardUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.stopPropagation()}
+            className="font-mono text-[9px] uppercase tracking-[0.08em] text-accent transition hover:text-[#b9a0ff]"
+          >
+            Orderly dashboard ↗
+          </a>
+          <span className="font-mono text-[9px] text-dim">
+            {agent.userId ? `user ${agent.userId}` : ""}
+          </span>
+        </div>
+      ) : null}
     </article>
   );
 }

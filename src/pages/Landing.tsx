@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AgentFleet from "../components/AgentFleet";
 import TickerStrip from "../components/TickerStrip";
 import { useAgentFleet } from "../lib/useAgents";
@@ -71,6 +71,7 @@ function Output({ children }: { children: ReactNode }) {
 
 export default function Landing() {
   const fleet = useAgentFleet();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -105,10 +106,10 @@ export default function Landing() {
             </div>
             <div className="mt-9 flex flex-wrap gap-7 border-t border-white/10 pt-6 text-[13px] text-dim">
               <span>
-                <strong className="mr-1 font-mono font-medium text-ink">3</strong> live agents
+                <strong className="mr-1 font-mono font-medium text-ink">3</strong> strategies
               </span>
               <span>
-                <strong className="mr-1 font-mono font-medium text-ink">0</strong> keys in the browser
+                <strong className="mr-1 font-mono font-medium text-ink">1k</strong> allocated per agent
               </span>
               <span>
                 <strong className="mr-1 font-mono font-medium text-ink">1</strong> CLI control plane
@@ -179,11 +180,13 @@ export default function Landing() {
             configured={fleet.configured}
             updatedAt={fleet.updatedAt}
             compact
+            onSelect={(id) => navigate(`/dashboard?agent=${encodeURIComponent(id)}`)}
           />
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
             <p className="max-w-[680px] text-[13px] leading-relaxed text-muted">
               The fleet runs on Cloudflare Workers. Each agent has its own testnet account,
-              a cron schedule, and a D1 decision log. Manual control stays with the CLI.
+              a cron schedule, and a D1 decision log. Select a card to focus the desk.
+              Manual control stays with the CLI.
             </p>
             <Link
               to="/dashboard"

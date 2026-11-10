@@ -27,14 +27,16 @@ export default function ActivityFeed({
   decisions,
   agents,
   loading,
+  filterName,
 }: {
   decisions: Decision[];
   agents: AgentState[];
   loading: boolean;
+  filterName?: string;
 }) {
   return (
     <Panel
-      title="Live activity"
+      title={filterName ? `Live activity · ${filterName}` : "Live activity"}
       action={
         <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-dim">read-only</span>
       }

@@ -10,6 +10,8 @@ export default function AgentFleet({
   configured,
   updatedAt,
   compact = false,
+  selectedId = null,
+  onSelect,
 }: {
   agents: AgentState[];
   loading: boolean;
@@ -17,9 +19,12 @@ export default function AgentFleet({
   configured: boolean;
   updatedAt: number | null;
   compact?: boolean;
+  selectedId?: string | null;
+  onSelect?: (id: string) => void;
 }) {
-  const equity = agents.reduce((sum, agent) => sum + (agent.equity ?? 0), 0);
+  const equity = agents.reduce((sum, agent) => sum + (agent.sleeveEquity ?? agent.equity ?? 0), 0);
   const pnl = agents.reduce((sum, agent) => sum + (agent.pnl ?? 0), 0);
+  const reserve = agents.reduce((sum, agent) => sum + (agent.reserve ?? 0), 0);
   const open = agents.filter((agent) => agent.position).length;
 
   return (
@@ -37,14 +42,16 @@ export default function AgentFleet({
             <p className="mt-2 max-w-[620px] text-[13px] leading-relaxed text-muted">
               Workers run the schedules, sign testnet orders, and write every decision to D1.
               The browser is read-only; each action can be reproduced with the CLI.
+              {onSelect ? " Select a card to focus the desk on one agent." : ""}
             </p>
           ) : null}
         </div>
         <div className="flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-[0.08em] text-dim">
           <span>{agents.length || 3} agents</span>
           <span>{open} in position</span>
-          <span className="text-ink">{fmtUsd(equity)} equity</span>
+          <span className="text-ink">{fmtUsd(equity)} allocated</span>
           <span className={pnlTone(pnl)}>{fmtSignedUsd(pnl)}</span>
+          {reserve > 0.5 ? <span>{fmtUsd(reserve)} reserve</span> : null}
           <span className="rounded-full border border-white/10 px-2 py-1">read-only</span>
         </div>
       </div>
@@ -67,13 +74,19 @@ export default function AgentFleet({
       ) : (
         <div className={cn("mt-5 grid gap-3", compact ? "md:grid-cols-3" : "lg:grid-cols-3")}>
           {agents.map((agent) => (
-            <AgentCard key={agent.id} agent={agent} />
+            <AgentCard
+              key={agent.id}
+              agent={agent}
+              selected={selectedId === agent.id}
+              dimmed={Boolean(selectedId && selectedId !== agent.id)}
+              onSelect={onSelect}
+            />
           ))}
         </div>
       )}
 
       <div className="mt-3 flex flex-wrap justify-between gap-2 font-mono text-[9px] uppercase tracking-[0.07em] text-dim">
-        <span>testnet demo · no real funds</span>
+        <span>testnet demo · no real funds · $1,000 allocated per agent</span>
         <span>{updatedAt ? `dashboard updated ${timeAgo(updatedAt)}` : "waiting for the fleet"}</span>
       </div>
     </section>
