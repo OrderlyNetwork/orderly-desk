@@ -1,4 +1,4 @@
-import { generateCommentary } from "./commentary";
+import { generateCommentary, reviewEntry } from "./commentary";
 import {
   accountById,
   AGENT_INTERVALS,
@@ -177,6 +177,7 @@ async function runAgent(env: Env, account: AgentAccount, agent: AgentRow) {
     let actionLabel = "HOLD";
     let reason = result.reason;
     let source = "rules";
+    let recordDecision = false;
 
     if (result.action === "open" && result.side && mark > 0) {
       const rawQuantity = MAX_NOTIONAL_USDC / mark;
@@ -185,21 +186,32 @@ async function runAgent(env: Env, account: AgentAccount, agent: AgentRow) {
       quantity = Math.max(MIN_QUANTITY, Number(stepped.toFixed(3)));
 
       if (quantity * mark >= 10) {
-        await setLeverage(env, account, account.symbol, 3);
-        const commentary = await generateCommentary(env, account, result, market);
-        reason = commentary.text;
-        source = commentary.source;
+        const veto = await reviewEntry(env, account, result, market, position, quantity);
+        if (!veto.approved) {
+          actionLabel = `VETO ${result.side === "BUY" ? "LONG" : "SHORT"}`;
+          reason = veto.reason;
+          source = veto.source;
+          quantity = null;
+          result.action = "hold";
+          recordDecision = true;
+        } else {
+          await setLeverage(env, account, account.symbol, 3);
+          const commentary = await generateCommentary(env, account, result, market);
+          reason = commentary.text;
+          source = commentary.source;
 
-        const order = await placeOrder(env, account, {
-          symbol: account.symbol,
-          side: result.side,
-          orderType: "MARKET",
-          quantity,
-          clientOrderId: `${account.id}-${Date.now()}`,
-        });
-        orderId = order.order_id == null ? null : String(order.order_id);
-        actionLabel = `OPEN ${result.side === "BUY" ? "LONG" : "SHORT"} ${quantity} @ market`;
-        price = mark;
+          const order = await placeOrder(env, account, {
+            symbol: account.symbol,
+            side: result.side,
+            orderType: "MARKET",
+            quantity,
+            clientOrderId: `${account.id}-${Date.now()}`,
+          });
+          orderId = order.order_id == null ? null : String(order.order_id);
+          actionLabel = `OPEN ${result.side === "BUY" ? "LONG" : "SHORT"} ${quantity} @ market`;
+          price = mark;
+          recordDecision = true;
+        }
       } else {
         result.action = "hold";
         reason = `Skipped: ${quantity} ${account.symbol} is below the minimum notional.`;
@@ -214,6 +226,7 @@ async function runAgent(env: Env, account: AgentAccount, agent: AgentRow) {
         const commentary = await generateCommentary(env, account, result, market);
         reason = commentary.text;
         source = commentary.source;
+        recordDecision = true;
       } else {
         result.action = "hold";
         reason = "Close signal, but the position was already flat.";
@@ -230,7 +243,7 @@ async function runAgent(env: Env, account: AgentAccount, agent: AgentRow) {
       .bind(finishedAt, "ok", actionLabel, reason.slice(0, 500), indicatorsJson, runId)
       .run();
 
-    if (result.action !== "hold") {
+    if (recordDecision) {
       await env.DB.prepare(
         `INSERT INTO decisions
           (agent_id, run_id, created_at, action, symbol, price, quantity, order_id, reason, source, indicators_json)

@@ -1,5 +1,7 @@
 import { getAgentStates, getDecisions, getRuns, runDueAgents } from "./agents";
 import { parseAgents } from "./config";
+import { AI_MODEL } from "./commentary";
+import { ensureDailyRecap, listRecaps } from "./recap";
 import type { AgentState, Env } from "./types";
 
 function allowedOrigins(env: Env): string[] {
@@ -91,6 +93,7 @@ export default {
           network: env.ORDERLY_NETWORK,
           accounts: config.accounts.length,
           hasAI: Boolean(env.AI),
+          aiModel: AI_MODEL,
           tradingEnabled: env.AGENTS_ENABLED !== "0" && env.ORDERLY_NETWORK === "testnet",
           time: new Date().toISOString(),
         });
@@ -114,13 +117,18 @@ export default {
         return json(request, env, { runs: await getRuns(env, Number.isFinite(limit) ? limit : 50) });
       }
 
+      if (url.pathname === "/recaps") {
+        const limit = Number(url.searchParams.get("limit") ?? 7);
+        return json(request, env, { recaps: await listRecaps(env, Number.isFinite(limit) ? limit : 7) });
+      }
+
       return json(
         request,
         env,
         {
           name: "orderly-desk-agents",
           network: env.ORDERLY_NETWORK,
-          routes: ["/health", "/agents", "/desk", "/decisions", "/runs"],
+          routes: ["/health", "/agents", "/desk", "/decisions", "/runs", "/recaps"],
           readOnly: true,
         },
         200,
@@ -143,6 +151,15 @@ export default {
       if (count) console.log(`agents ran: ${count}`);
     } catch (error) {
       console.error("scheduled run failed", error);
+    }
+
+    try {
+      const result = await ensureDailyRecap(env);
+      if (result?.created) {
+        console.log(`daily recap ready for ${result.recap.day} (${result.recap.source})`);
+      }
+    } catch (error) {
+      console.error("daily recap failed", error);
     }
   },
 } satisfies ExportedHandler<Env>;

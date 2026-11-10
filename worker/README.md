@@ -10,9 +10,10 @@ cron (*/2 * * * *)
   → due agents (intervals 4 / 6 / 8 minutes)
   → market data from Orderly public REST
   → deterministic strategy
+  → DeepSeek V4.1 Flash risk veto
   → Ed25519-signed Orderly REST order (testnet)
-  → D1: runs, decisions, snapshots
-  → GET /agents, /decisions, /runs, /desk
+  → D1: runs, decisions, snapshots, recaps
+  → GET /agents, /decisions, /runs, /recaps, /desk
 ```
 
 The Worker signs directly with `@noble/ed25519`; it does not execute the CLI binary.
@@ -27,6 +28,7 @@ The CLI remains the local control plane and the reference implementation.
 | `GET /desk` | aggregated fleet account view |
 | `GET /decisions?limit=` | action log with reasons and CLI equivalents |
 | `GET /runs?limit=` | every scheduled check, including holds/errors |
+| `GET /recaps?limit=` | AI-written daily desk recaps |
 
 All routes are read-only. There is no order-entry endpoint.
 
@@ -63,19 +65,31 @@ Risk limits: one position per account, `MAX_NOTIONAL_USDC = 200`, minimum quanti
 below 50 USDC. Every run is serialized with a D1 lock. The dashboard shows a $1,000
 sleeve per agent; extra faucet balance is treated as unallocated reserve.
 
-## AI commentary
+## AI risk veto and daily recap
 
-The production environment enables Workers AI:
+The production environment enables Workers AI and uses DeepSeek V4.1 Flash
+(`@cf/deepseek-ai/deepseek-v4.1-flash-1017`):
 
 ```toml
 [env.production.ai]
 binding = "AI"
 ```
 
-The LLM only explains the pre-decided action; it cannot change the side, size, or
-trigger. Without the binding, the rule reason is stored and the dashboard labels the
-source as `rules`. Local dev intentionally omits the AI binding so it does not require
-a remote session.
+Two jobs, both outside trade selection:
+
+1. **Risk veto** — when a strategy proposes an entry, the model receives the side,
+   quantity, market snapshot, indicators, rule reason, and current position. It must
+   return strict JSON `{ "approve": boolean, "reason": string }`. A rejection is stored
+   as a `VETO LONG` / `VETO SHORT` decision and no order is signed. If the model errors
+   or returns invalid JSON, the entry is blocked (fail closed).
+2. **Daily recap** — after UTC midnight the cron generates one recap for the previous
+   day from D1 decisions and equity snapshots. It is stored in `recaps` and served on
+   `/recaps`.
+
+Close orders are not vetoed; they reduce risk. Commentary still runs on opens and
+closes after approval. Without the `AI` binding, entries follow the rules and the
+dashboard labels the source as `rules`. V4.1 Flash is a paid-plan model; local dev
+intentionally omits the AI binding so it does not require a remote session.
 
 ## Deploy
 

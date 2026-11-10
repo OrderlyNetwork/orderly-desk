@@ -46,7 +46,7 @@ Each agent has its own testnet account, all trading `PERP_BTC_USDC`:
 
 Each agent is displayed as a **$1,000 sleeve**. The extra faucet balance on the Momentum account is an unallocated reserve, shown separately in the fleet summary rather than making one agent look larger than the others. Clicking an agent card opens/focuses the desk, and the Orderly dashboard link deep-links to that account.
 
-Signals are deterministic. Workers AI can add a one-sentence commentary/risk explanation when the `AI` binding is enabled; without it the rule text is used and the dashboard labels the source as `rules`. The agent never changes the pre-decided action based on the LLM.
+Signals are deterministic, but entries pass through an AI risk officer before any order is signed. DeepSeek V4.1 Flash reviews the proposed side, size, market snapshot, indicators, and current position, then approves or vetoes with a short reason. A veto is recorded in the decision log and no order is sent. The same model writes a daily UTC recap from the D1 decision log and equity snapshots. The model never chooses the side, size, or timing. Without the `AI` binding the agents follow the rules and label sources as `rules`.
 
 Key custody is deliberately split:
 
@@ -74,7 +74,7 @@ The hosted agents do **not** run the Rust CLI binary; Workers cannot exec native
 - The latest Orderly CLI release (`orderly` on `PATH`, or a sibling checkout at `../cli`)
 - `jq` for the demo script and walkthrough snippets
 - Optional: Cloudflare account for deploying the Worker
-- Optional: Workers AI binding for LLM commentary
+- Optional: Workers Paid plan for DeepSeek V4.1 Flash (AI risk veto + daily recap)
 
 ## Run the site and agents locally
 
