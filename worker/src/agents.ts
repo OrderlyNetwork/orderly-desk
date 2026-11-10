@@ -96,6 +96,12 @@ export async function runDueAgents(env: Env): Promise<number> {
 
   let completed = 0;
 
+  console.log("scheduled run", {
+    at: new Date(now).toISOString(),
+    due: due.results?.length ?? 0,
+    enabled: env.AGENTS_ENABLED,
+  });
+
   for (const agent of due.results ?? []) {
     const account = accountById(config, agent.id);
     if (!account) continue;

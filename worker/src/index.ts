@@ -137,6 +137,7 @@ export default {
   },
 
   async scheduled(_controller: ScheduledController, env: Env, _ctx: ExecutionContext): Promise<void> {
+    console.log("worker scheduled", new Date().toISOString());
     try {
       const count = await runDueAgents(env);
       if (count) console.log(`agents ran: ${count}`);
