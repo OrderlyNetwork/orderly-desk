@@ -9,6 +9,14 @@ Three autonomous agents trade BTC perps on **testnet**. The agents run on Cloudf
 
 The CLI itself runs on **mainnet or testnet**. The demo chooses testnet only so the agents can trade without real funds.
 
+## Live
+
+- Site: https://orderly-desk.pages.dev
+- Agents API: https://orderly-desk-agents.orderlynetwork.workers.dev
+- Health: https://orderly-desk-agents.orderlynetwork.workers.dev/health
+
+The production Worker cron runs every two minutes. The Pages build uses the Worker URL in `VITE_AGENTS_API`.
+
 ## What is in here
 
 - **Live agent desk** — three Worker-run strategies, equity, positions, last decision, next run, and a read-only activity feed.
@@ -235,6 +243,6 @@ Generated: `src/data/commands.json`, `src/data/versions.json`, `src/data/desk-sn
 - The testnet order book is thin and the testnet API occasionally returns 502. The dashboard defaults market data to mainnet reference and keeps the agent fleet on testnet; if testnet is down, agent cards show a short upstream error and retry on the next cron.
 - The dashboard is read-only. It never signs or submits an order.
 - Predict is no longer on the main dashboard; it remains a CLI walkthrough chapter.
-- The public site cannot show live agent data until it is built with `VITE_AGENTS_API` pointing at a deployed Worker.
+- The public site is built with `VITE_AGENTS_API` pointing at the deployed Worker; rebuild if the Worker URL changes.
 - The hosted agents use testnet-only keys in Worker secrets. Do not reuse them on mainnet.
 - Chart rendering is by TradingView Lightweight Charts (Apache 2.0). The Orderly name and logo remain Orderly Network's brand assets.
