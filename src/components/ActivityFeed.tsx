@@ -68,12 +68,18 @@ export default function ActivityFeed({
                   <span
                     className={cn(
                       "rounded px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.06em]",
-                      decision.action.startsWith("OPEN")
-                        ? "bg-accent/10 text-accent"
-                        : "bg-white/[0.06] text-dim",
+                      decision.action.startsWith("VETO")
+                        ? "bg-loss/10 text-loss"
+                        : decision.action.startsWith("OPEN")
+                          ? "bg-accent/10 text-accent"
+                          : "bg-white/[0.06] text-dim",
                     )}
                   >
-                    {decision.source === "workers-ai" ? "AI commentary" : "rules"}
+                    {decision.action.startsWith("VETO")
+                      ? "AI veto"
+                      : decision.source === "workers-ai"
+                        ? "AI commentary"
+                        : "rules"}
                   </span>
                 </div>
 

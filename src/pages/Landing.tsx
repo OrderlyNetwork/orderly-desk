@@ -185,8 +185,9 @@ export default function Landing() {
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
             <p className="max-w-[680px] text-[13px] leading-relaxed text-muted">
               The fleet runs on Cloudflare Workers. Each agent has its own testnet account,
-              a cron schedule, and a D1 decision log. Select a card to focus the desk.
-              Manual control stays with the CLI.
+              a cron schedule, and a D1 decision log. Entries are approved or vetoed by a
+              DeepSeek risk officer before signing, and the model writes a daily recap.
+              Select a card to focus the desk. Manual control stays with the CLI.
             </p>
             <Link
               to="/dashboard"

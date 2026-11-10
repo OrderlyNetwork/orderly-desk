@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import ActivityFeed from "../components/ActivityFeed";
 import AgentFleet from "../components/AgentFleet";
 import CandleChart from "../components/CandleChart";
+import DailyRecapPanel from "../components/DailyRecapPanel";
 import OrderbookPanel from "../components/OrderbookPanel";
 import StatsBar from "../components/StatsBar";
 import TradeTape from "../components/TradeTape";
@@ -14,7 +15,7 @@ import {
   useOrderbook,
   useTrades,
 } from "../lib/useMarketData";
-import { useAgentDecisions, useAgentFleet } from "../lib/useAgents";
+import { useAgentDecisions, useAgentFleet, useDailyRecaps } from "../lib/useAgents";
 import { cn, fmtClock, marketLabel } from "../lib/format";
 import type { Interval, Network } from "../lib/types";
 
@@ -29,6 +30,7 @@ export default function Dashboard() {
 
   const fleet = useAgentFleet();
   const activity = useAgentDecisions(40);
+  const recaps = useDailyRecaps(7);
   const selectedAgent = (fleet.data ?? []).find((agent) => agent.id === selectedId) ?? null;
   const decisions = selectedId
     ? (activity.data ?? []).filter((decision) => decision.agent_id === selectedId)
@@ -73,9 +75,11 @@ export default function Dashboard() {
           </h1>
           <p className="mt-4 max-w-[680px] text-[15px] leading-[1.65] text-muted md:text-base">
             Three autonomous agents trade BTC perps on testnet. The Workers sign orders
-            directly, record every decision in D1, and expose a read-only feed. The CLI is
-            the control plane; the dashboard never signs or submits an order. The market
-            panel uses mainnet reference data; switch it to testnet to see the demo venue.
+            directly, record every decision in D1, and expose a read-only feed. Entries
+            also pass through a DeepSeek risk veto, and the model writes a daily recap.
+            The CLI is the control plane; the dashboard never signs or submits an order.
+            The market panel uses mainnet reference data; switch it to testnet to see the
+            demo venue.
           </p>
         </div>
         <div className="flex flex-col items-start gap-2 sm:items-end">
@@ -130,6 +134,12 @@ export default function Dashboard() {
               show all
             </button>
           </div>
+        </div>
+      ) : null}
+
+      {!selectedId ? (
+        <div className="mt-3">
+          <DailyRecapPanel recaps={recaps.data ?? []} loading={recaps.loading} />
         </div>
       ) : null}
 

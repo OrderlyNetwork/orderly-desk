@@ -1,4 +1,4 @@
-import type { AgentHealth, AgentState, Decision } from "./agentTypes";
+import type { AgentHealth, AgentState, DailyRecap, Decision } from "./agentTypes";
 
 const configuredBase = (import.meta.env.VITE_AGENTS_API ?? "").replace(/\/$/, "");
 
@@ -33,4 +33,12 @@ export async function fetchDecisions(limit = 40, signal?: AbortSignal): Promise<
 
 export async function fetchAgentHealth(signal?: AbortSignal): Promise<AgentHealth> {
   return getJson<AgentHealth>("/health", signal);
+}
+
+export async function fetchRecaps(limit = 7, signal?: AbortSignal): Promise<DailyRecap[]> {
+  const payload = await getJson<{ recaps: DailyRecap[] }>(
+    `/recaps?limit=${limit}`,
+    signal,
+  );
+  return payload.recaps ?? [];
 }

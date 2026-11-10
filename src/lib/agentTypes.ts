@@ -56,6 +56,15 @@ export interface AgentHealth {
   network: string;
   accounts: number;
   hasAI: boolean;
+  aiModel?: string;
   tradingEnabled: boolean;
   time: string;
+}
+
+export interface DailyRecap {
+  day: string;
+  createdAt: number;
+  text: string;
+  source: "workers-ai" | "rules";
+  model: string;
 }
