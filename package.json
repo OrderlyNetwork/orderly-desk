@@ -1,0 +1,55 @@
+{
+  "name": "orderly-desk",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The Orderly Desk - a live testnet trading showcase for the Orderly CLI",
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/sync-versions.mjs && node scripts/gen-agent-docs.mjs && tsc --noEmit && tsc -p worker/tsconfig.json && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit && tsc -p worker/tsconfig.json",
+    "typecheck:site": "tsc --noEmit",
+    "typecheck:worker": "tsc -p worker/tsconfig.json",
+    "bridge": "node server/bridge.mjs",
+    "worker:dev": "wrangler dev --config worker/wrangler.toml --test-scheduled --port 8788",
+    "worker:tick": "node scripts/tick-worker.mjs",
+    "worker:deploy": "wrangler deploy --config worker/wrangler.toml --env production",
+    "worker:db:local": "wrangler d1 execute orderly-desk-agents --local --config worker/wrangler.toml --file worker/migrations/0001_init.sql",
+    "worker:db:remote": "wrangler d1 execute orderly-desk-agents --remote --config worker/wrangler.toml --file worker/migrations/0001_init.sql",
+    "worker:tail": "wrangler tail --config worker/wrangler.toml --env production",
+    "setup:agents": "node scripts/setup-testnet-agents.mjs",
+    "sync:versions": "node scripts/sync-versions.mjs",
+    "gen:agent-docs": "node scripts/gen-agent-docs.mjs",
+    "gen:reference": "node scripts/gen-reference.mjs",
+    "capture:desk": "node scripts/capture-desk.mjs",
+    "demo:trade": "bash scripts/demo-trade.sh"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@noble/ed25519": "^3.2.0",
+    "@noble/hashes": "^2.4.0",
+    "@scure/base": "^2.4.0",
+    "lightweight-charts": "^5.2.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261109.1",
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "ethers": "^6.17.0",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.8",
+    "wrangler": "^4.158.0"
+  }
+}

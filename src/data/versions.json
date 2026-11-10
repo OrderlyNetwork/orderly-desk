@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-10T10:32:21.727Z",
+  "showcase": "0.1.0",
+  "cli": {
+    "version": "2.1.2",
+    "tag": "v2.1.2",
+    "publishedAt": "2026-11-06T15:09:11Z",
+    "url": "https://github.com/OrderlyNetwork/cli/releases/tag/v2.1.2",
+    "verifiedWith": "2.1.2"
+  },
+  "tradingMcp": {
+    "version": "0.2.3",
+    "package": "@orderly.network/trading-mcp",
+    "command": "orderly-trading-mcp",
+    "url": "https://www.npmjs.com/package/@orderly.network/trading-mcp"
+  },
+  "mcpRegistry": {
+    "name": "io.github.OrderlyNetwork/trading-mcp",
+    "version": "0.2.1",
+    "status": "active",
+    "url": "https://registry.modelcontextprotocol.io/"
+  }
+}

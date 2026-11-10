@@ -1,0 +1,25 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' https://testnet-api.orderly.org https://api.orderly.org wss://testnet-ws-evm.orderly.org wss://ws-evm.orderly.org https://*.workers.dev
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/walkthrough.md
+  Content-Type: text/markdown; charset=utf-8
+
+/mcp.md
+  Content-Type: text/markdown; charset=utf-8
+
+/reference.md
+  Content-Type: text/markdown; charset=utf-8
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+
+/versions.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=300

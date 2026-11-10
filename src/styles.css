@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0b0c0f;
+  --color-bg-soft: #101116;
+  --color-panel: #14151a;
+  --color-panel-2: #1a1c22;
+  --color-ink: #e6e8ea;
+  --color-muted: #aeb4bc;
+  --color-dim: #7d8592;
+  --color-accent: #9c75ff;
+  --color-accent-strong: #6e21c8;
+  --color-gain: #2ee08a;
+  --color-loss: #ff5c6c;
+  --color-warn: #ffc857;
+  --font-sans: "Inter Variable", "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+  --animate-live: live 2.4s ease-in-out infinite;
+  --animate-blink: blink 1.1s steps(1) infinite;
+}
+
+@keyframes live {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background:
+      radial-gradient(900px 500px at 15% -10%, rgba(110, 33, 200, 0.18), transparent 65%),
+      radial-gradient(700px 400px at 90% 0%, rgba(156, 117, 255, 0.08), transparent 70%);
+  }
+
+  ::selection {
+    background: rgba(156, 117, 255, 0.35);
+    color: #fff;
+  }
+
+  button,
+  input,
+  select {
+    font: inherit;
+  }
+}
+
+@utility shell {
+  width: min(1200px, calc(100% - 32px));
+  margin-inline: auto;
+
+  @media (min-width: 768px) {
+    width: min(1200px, calc(100% - 48px));
+  }
+}
+
+@utility eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+@utility live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--color-gain);
+  box-shadow: 0 0 0 4px rgba(46, 224, 138, 0.12);
+  animation: var(--animate-live);
+}
+
+@utility term-line {
+  display: flex;
+  gap: 10px;
+  white-space: nowrap;
+  color: #d9dce1;
+}
+
+@utility term-out {
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #8b93a1;
+  padding-left: 20px;
+}

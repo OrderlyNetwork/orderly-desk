@@ -1,0 +1,127 @@
+{
+  "capturedAt": "2026-11-09T14:27:04.260Z",
+  "account": "0x6c80370227172f94c389fef23c44b4f47642f8987efd0293d56617d36207ba17",
+  "network": "testnet",
+  "balance": 2997.249793,
+  "equity": 2999.647973,
+  "freeCollateral": 2983.11715966,
+  "unrealizedPnl": -0.38282,
+  "positions": [
+    {
+      "symbol": "PERP_ETH_USDC",
+      "kind": "PERP",
+      "side": "LONG",
+      "quantity": 0.01,
+      "entryPrice": 2116.89,
+      "markPrice": 2118.65,
+      "unrealizedPnl": -0.0083,
+      "leverage": 3
+    },
+    {
+      "symbol": "PERP_BTC5M2611091425_USDC",
+      "kind": "BINARY",
+      "side": "DOWN",
+      "quantity": 5,
+      "entryPrice": 0.54,
+      "markPrice": 0.48,
+      "unrealizedPnl": -0.37452,
+      "leverage": 1
+    }
+  ],
+  "orders": [
+    {
+      "id": "3953559304",
+      "symbol": "PERP_ETH_USDC",
+      "side": "BUY",
+      "type": "LIMIT",
+      "price": 2100,
+      "quantity": 0.01,
+      "filled": 0,
+      "status": "NEW",
+      "createdAt": 1794233944289
+    }
+  ],
+  "fills": [
+    {
+      "id": "10378497352",
+      "symbol": "PERP_BTC5M2611091425_USDC",
+      "side": "SELL",
+      "price": 0.46,
+      "quantity": 5,
+      "fee": 0.07452,
+      "ts": 1794234369488
+    },
+    {
+      "id": "10378497347",
+      "symbol": "PERP_BTC5M2611091415_USDC",
+      "side": "SELL",
+      "price": 0.43,
+      "quantity": 5,
+      "fee": 0.07353,
+      "ts": 1794233950568
+    },
+    {
+      "id": "10378497346",
+      "symbol": "PERP_BTC5M2611091415_USDC",
+      "side": "BUY",
+      "price": 0.57,
+      "quantity": 5,
+      "fee": 0.07353,
+      "ts": 1794233948552
+    },
+    {
+      "id": "10378497343",
+      "symbol": "PERP_ETH_USDC",
+      "side": "SELL",
+      "price": 2118.24,
+      "quantity": 0.01,
+      "fee": 0.01271,
+      "ts": 1794233921866
+    },
+    {
+      "id": "10378497339",
+      "symbol": "PERP_BTC5M2611091410_USDC",
+      "side": "SELL",
+      "price": 1,
+      "quantity": 5,
+      "fee": 0,
+      "ts": 1794233768032
+    },
+    {
+      "id": "10378497335",
+      "symbol": "PERP_BTC5M2611091410_USDC",
+      "side": "BUY",
+      "price": 0.6,
+      "quantity": 5,
+      "fee": 0.072,
+      "ts": 1794233672733
+    },
+    {
+      "id": "10378497334",
+      "symbol": "PERP_ETH_USDC",
+      "side": "BUY",
+      "price": 2116.89,
+      "quantity": 0.02,
+      "fee": 0.025403,
+      "ts": 1794233649617
+    },
+    {
+      "id": "10358729078",
+      "symbol": "PERP_BTC5M2611050955_USDC",
+      "side": "SELL",
+      "price": 0.39,
+      "quantity": 5,
+      "fee": 0.000714,
+      "ts": 1793872531265
+    },
+    {
+      "id": "10358729077",
+      "symbol": "PERP_BTC5M2611050955_USDC",
+      "side": "BUY",
+      "price": 0.6,
+      "quantity": 5,
+      "fee": 0.00072,
+      "ts": 1793872518456
+    }
+  ]
+}

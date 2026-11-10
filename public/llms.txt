@@ -1,0 +1,31 @@
+# The Orderly Desk
+
+> An agentic trading showcase on Orderly testnet: three autonomous BTC perp agents, a read-only dashboard, and the CLI as the control plane.
+
+## Start here
+
+- [Agent walkthrough](/walkthrough.md): the manual CLI path, commands, guardrails, Predict, MCP alternative.
+- [Trading MCP guide](/mcp.md): the local stdio path for AI clients.
+- [CLI reference](/reference.md): all 80 commands generated from `orderly schema`.
+- [Version data](/versions.json): current CLI, npm MCP, and registry versions.
+
+## Showcase
+
+- [Agent desk](/dashboard): live testnet fleet, decisions, and mainnet reference market data. Read-only.
+- [Human walkthrough](/walkthrough): long-form version with captured terminal output.
+- [Command reference page](/reference): searchable HTML version.
+
+## Guardrails
+
+- This demo trades testnet. The CLI itself supports mainnet and testnet.
+- The dashboard is read-only. It never signs or submits orders.
+- Hosted agent keys live in Worker secrets; the browser never receives them.
+- Local CLI keys live in the OS keychain.
+- Preview mutations with `--dry-run` first.
+
+## Versions
+
+- orderly: 2.1.2 (walkthrough verified with 2.1.2)
+- trading-mcp: 0.2.3
+- MCP registry: 0.2.1 (active)
+- checked: 2026-11-10
