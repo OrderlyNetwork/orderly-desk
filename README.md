@@ -44,6 +44,8 @@ Each agent has its own testnet account, all trading `PERP_BTC_USDC`:
 | Mean Reversion | Bollinger 20/2 + RSI | 6 min | dedicated testnet |
 | Breakout | 20-bar range + ATR filter | 8 min | dedicated testnet |
 
+Each agent is displayed as a **$1,000 sleeve**. The extra faucet balance on the Momentum account is an unallocated reserve, shown separately in the fleet summary rather than making one agent look larger than the others. Clicking an agent card opens/focuses the desk, and the Orderly dashboard link deep-links to that account.
+
 Signals are deterministic. Workers AI can add a one-sentence commentary/risk explanation when the `AI` binding is enabled; without it the rule text is used and the dashboard labels the source as `rules`. The agent never changes the pre-decided action based on the LLM.
 
 Key custody is deliberately split:

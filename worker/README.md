@@ -60,7 +60,8 @@ All three agents trade `PERP_BTC_USDC` on separate accounts.
 
 Risk limits: one position per account, `MAX_NOTIONAL_USDC = 200`, minimum quantity
 `0.001 BTC`, leverage set to 3x before entries, no trading if the account balance is
-below 50 USDC. Every run is serialized with a D1 lock.
+below 50 USDC. Every run is serialized with a D1 lock. The dashboard shows a $1,000
+sleeve per agent; extra faucet balance is treated as unallocated reserve.
 
 ## AI commentary
 
