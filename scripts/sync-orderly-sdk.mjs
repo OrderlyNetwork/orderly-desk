@@ -5,10 +5,10 @@
  * The showcase is a standalone repository, so it commits the generated SDK
  * artifacts. Regenerate them with:
  *
- *   cd ../cli/bindings/js && pnpm build
- *   cd ../../showcase && node scripts/sync-orderly-sdk.mjs
+ *   cd ../cli && pnpm build
+ *   cd ../showcase && node scripts/sync-orderly-sdk.mjs
  */
-import { cpSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -16,8 +16,11 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
 const source = process.env.ORDERLY_SDK_DIR
   ? path.resolve(process.env.ORDERLY_SDK_DIR)
-  : path.resolve(root, "../cli/bindings/js");
+  : path.resolve(root, "../cli");
 const target = path.resolve(root, "vendor/orderly");
+const sourcePackage = JSON.parse(
+  readFileSync(path.join(source, "package.json"), "utf8"),
+);
 
 rmSync(target, { recursive: true, force: true });
 mkdirSync(target, { recursive: true });
@@ -33,9 +36,8 @@ writeFileSync(
   `${JSON.stringify(
     {
       name: "@orderly.network/orderly",
-      version: "0.1.0",
-      description:
-        "WebAssembly SDK for Orderly Network, built from the Orderly CLI core",
+      version: sourcePackage.version,
+      description: sourcePackage.description,
       type: "module",
       main: "./dist/index.js",
       types: "./dist/index.d.ts",
@@ -57,8 +59,8 @@ writeFileSync(
   path.join(target, "README.md"),
   `# @orderly.network/orderly (vendored)
 
-Generated from [OrderlyNetwork/cli](https://github.com/OrderlyNetwork/cli)
-\`bindings/js\`. Do not edit by hand.
+Generated from [OrderlyNetwork/cli](https://github.com/OrderlyNetwork/cli).
+The published package is the repository root. Do not edit by hand.
 
 The WebAssembly core is the CLI's Rust signing and request layer, compiled with
 \`wasm-bindgen\`. The transport is host \`fetch\`; the signer interface keeps key
@@ -67,9 +69,9 @@ material outside the SDK.
 Regenerate:
 
 \`\`\`bash
-cd ../cli/bindings/js
+cd ../cli
 pnpm build
-cd ../../showcase
+cd ../showcase
 node scripts/sync-orderly-sdk.mjs
 \`\`\`
 `,
