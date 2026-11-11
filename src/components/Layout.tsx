@@ -20,6 +20,7 @@ const footerColumns: Array<{ title: string; links: FooterLink[] }> = [
       { label: "Live agents", to: "/dashboard" },
       { label: "Walkthrough", to: "/walkthrough" },
       { label: "Command reference", to: "/reference" },
+      { label: "Source on GitHub", href: "https://github.com/OrderlyNetwork/orderly-desk" },
     ],
   },
   {

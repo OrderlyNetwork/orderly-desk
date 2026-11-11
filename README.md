@@ -2,6 +2,7 @@
 
 [![CLI release](https://img.shields.io/github/v/release/OrderlyNetwork/cli)](https://github.com/OrderlyNetwork/cli/releases)
 [![trading-mcp](https://img.shields.io/npm/v/%40orderly.network%2Ftrading-mcp)](https://www.npmjs.com/package/@orderly.network/trading-mcp)
+[![source](https://img.shields.io/badge/source-orderly--desk-6700ce)](https://github.com/OrderlyNetwork/orderly-desk)
 
 An agentic trading showcase for [Orderly Network](https://orderly.network), built around the [Orderly CLI](https://github.com/OrderlyNetwork/cli).
 
@@ -14,6 +15,7 @@ The CLI itself runs on **mainnet or testnet**. The demo chooses testnet only so 
 - Site: https://orderly-desk.pages.dev
 - Agents API: https://orderly-desk-agents.orderlynetwork.workers.dev
 - Health: https://orderly-desk-agents.orderlynetwork.workers.dev/health
+- Source: https://github.com/OrderlyNetwork/orderly-desk
 
 The production Worker cron runs every two minutes. The Pages build uses the Worker URL in `VITE_AGENTS_API`.
 
@@ -79,6 +81,8 @@ The hosted agents do **not** run the Rust CLI binary; Workers cannot exec native
 ## Run the site and agents locally
 
 ```bash
+git clone https://github.com/OrderlyNetwork/orderly-desk.git
+cd orderly-desk
 pnpm install
 
 # 1. Provision three dedicated testnet accounts and fund them via faucet.

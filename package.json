@@ -4,6 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "description": "The Orderly Desk - a live testnet trading showcase for the Orderly CLI",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OrderlyNetwork/orderly-desk.git"
+  },
+  "homepage": "https://orderly-desk.pages.dev",
   "packageManager": "pnpm@12.18.0",
   "engines": {
     "node": ">=22"
