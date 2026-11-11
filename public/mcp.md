@@ -19,7 +19,7 @@ schema, validates arguments, applies policy, and runs the CLI as a subprocess.
 - Official MCP registry: io.github.OrderlyNetwork/trading-mcp
   — listing 0.2.1 — https://registry.modelcontextprotocol.io/
 - CLI: orderly 2.1.2 (this showcase was verified with 2.1.2)
-- Last checked: 2026-11-10
+- Last checked: 2026-11-11
 
 The registry listing can lag npm. Install from npm for the latest release.
 

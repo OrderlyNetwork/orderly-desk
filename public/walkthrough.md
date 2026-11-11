@@ -7,7 +7,7 @@
 - CLI: **orderly 2.1.2** (verified with 2.1.2)
 - Live fleet: three hosted testnet agents on Workers; see `/dashboard`
 - MCP alternative: **@orderly.network/trading-mcp 0.2.3**
-- Last checked: 2026-11-10
+- Last checked: 2026-11-11
 
 ## Live fleet
 
