@@ -19,7 +19,7 @@ import {
   placeOrder,
   setLeverage,
 } from "./orderly";
-import { evaluateStrategy } from "./strategies";
+import { evaluateStrategy } from "@orderly-desk/strategies";
 import type {
   AgentAccount,
   AgentRow,

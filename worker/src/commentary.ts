@@ -1,5 +1,5 @@
 import type { AgentAccount, Env, MarketRow, PositionRow } from "./types";
-import type { StrategyResult } from "./strategies";
+import type { StrategyResult } from "@orderly-desk/strategies";
 
 export const AI_MODEL = "@cf/deepseek-ai/deepseek-v4.1-flash-1017";
 

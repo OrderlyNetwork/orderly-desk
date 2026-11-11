@@ -1,30 +1,22 @@
-import { atr, bollinger, ema, highest, last, lowest, rsi } from "./indicators";
-import type { Candle, MarketRow, PositionRow } from "./types";
-
-export type Bias = "long" | "short" | "flat";
-export type Action = "open" | "close" | "hold";
-
-export interface StrategyResult {
-  action: Action;
-  side?: "BUY" | "SELL";
-  bias: Bias;
-  reason: string;
-  indicators: Record<string, number | null>;
-}
-
-interface Context {
-  strategy: string;
-  candles: Candle[];
-  market: MarketRow;
-  position: PositionRow | null;
-}
+import { atr, bollinger, ema, highest, last, lowest, rsi } from "./indicators.js";
+import type {
+  Bias,
+  Candle,
+  PositionRow,
+  StrategyContext,
+  StrategyResult,
+} from "./types.js";
 
 function positionBias(position: PositionRow | null): Bias {
   if (!position) return "flat";
   return Number(position.position_qty) > 0 ? "long" : "short";
 }
 
-function stopHit(position: PositionRow | null, mark: number, averageTrueRange: number | null): boolean {
+function stopHit(
+  position: PositionRow | null,
+  mark: number,
+  averageTrueRange: number | null,
+): boolean {
   if (!position || !averageTrueRange) return false;
   const entry = Number(position.average_open_price);
   const quantity = Number(position.position_qty);
@@ -38,14 +30,18 @@ function closeSide(position: PositionRow | null): "BUY" | "SELL" {
 }
 
 function decide(
-  context: Context,
+  context: StrategyContext,
   bias: Bias,
   exit: boolean,
   reason: string,
   indicators: Record<string, number | null>,
 ): StrategyResult {
   const current = positionBias(context.position);
-  const mark = Number(context.market.mark_price ?? last(context.candles.map((candle) => candle.close)) ?? 0);
+  const mark = Number(
+    context.market.mark_price ??
+      last(context.candles.map((candle) => candle.close)) ??
+      0,
+  );
   const currentAtr = indicators.atr ?? null;
 
   if (context.position) {
@@ -88,8 +84,9 @@ function decide(
   };
 }
 
-export function evaluateStrategy(context: Context): StrategyResult {
-  const candles = context.candles.length > 5 ? context.candles.slice(0, -1) : context.candles;
+export function evaluateStrategy(context: StrategyContext): StrategyResult {
+  const candles =
+    context.candles.length > 5 ? context.candles.slice(0, -1) : context.candles;
   if (candles.length < 30) {
     return {
       action: "hold",
@@ -156,7 +153,6 @@ export function evaluateStrategy(context: Context): StrategyResult {
     );
   }
 
-  // breakout
   const priorHigh = highest(highs.slice(0, -1), 20);
   const priorLow = lowest(lows.slice(0, -1), 20);
   const trend = last(ema(closes, 20)) ?? close;

@@ -9,14 +9,16 @@ to D1, and exposes a read-only API for the dashboard.
 cron (*/2 * * * *)
   → due agents (intervals 4 / 6 / 8 minutes)
   → market data from Orderly public REST
-  → deterministic strategy
-  → DeepSeek V4.1 Flash risk veto
-  → Ed25519-signed Orderly REST order (testnet)
+  → deterministic strategy (@orderly-desk/strategies)
+  → AI risk veto
+  → WASM SDK (CLI Rust core) signed order (testnet)
   → D1: runs, decisions, snapshots, recaps
   → GET /agents, /decisions, /runs, /recaps, /desk
 ```
 
-The Worker signs directly with `@noble/ed25519`; it does not execute the CLI binary.
+The Worker does not reimplement signing. It imports `@orderly.network/orderly`,
+generated from the CLI's `bindings/js` crate and compiled with `wasm-bindgen`.
+It does not execute the CLI binary; Workers cannot spawn native processes.
 The CLI remains the local control plane and the reference implementation.
 
 ## API
