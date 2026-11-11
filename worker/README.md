@@ -17,9 +17,10 @@ cron (*/2 * * * *)
 ```
 
 The Worker does not reimplement signing. It imports `@orderly.network/orderly`,
-generated from the CLI's `bindings/js` crate and compiled with `wasm-bindgen`.
-It does not execute the CLI binary; Workers cannot spawn native processes.
-The CLI remains the local control plane and the reference implementation.
+generated from the CLI's `sdk/` and `bindings/wasm` sources and compiled with
+`wasm-bindgen`. It does not execute the CLI binary; Workers cannot spawn native
+processes. The CLI remains the local control plane and the reference
+implementation.
 
 ## API
 

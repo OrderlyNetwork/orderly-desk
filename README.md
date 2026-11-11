@@ -57,7 +57,7 @@ Key custody is deliberately split:
 - **Hosted testnet agents** — dedicated testnet API keys in Worker secrets. The browser never sees them.
 - **Manual control** — import the same testnet key into the CLI (`orderly auth-import`) for `positions-list`, `order-cancel-all`, `positions-close`, etc.
 
-The hosted agents do **not** run the Rust CLI binary; Workers cannot exec native binaries. They import `@orderly.network/orderly`, the CLI's Rust signing and request core compiled to WebAssembly. The package is generated in the CLI repo under `bindings/js`; the showcase commits a vendored build under `vendor/orderly`. The browser still never sees a key.
+The hosted agents do **not** run the Rust CLI binary; Workers cannot exec native binaries. They import `@orderly.network/orderly`, the CLI's Rust signing and request core compiled to WebAssembly. The package is generated in the CLI repo from `sdk/` and `bindings/wasm`; the showcase commits a vendored build under `vendor/orderly`. The browser still never sees a key.
 
 ## Local agents and strategies
 
