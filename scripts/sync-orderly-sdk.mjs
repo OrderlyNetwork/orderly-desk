@@ -46,7 +46,6 @@ writeFileSync(
         },
       },
       files: ["dist", "wasm"],
-      sideEffects: false,
       engines: { node: ">=18" },
     },
     null,
