@@ -74,12 +74,12 @@ export default function Dashboard() {
             The agent desk.
           </h1>
           <p className="mt-4 max-w-[680px] text-[15px] leading-[1.65] text-muted md:text-base">
-            Three autonomous agents trade BTC perps on testnet. The Workers sign orders
-            directly, record every decision in D1, and expose a read-only feed. Entries
-            also pass through a DeepSeek risk veto, and the model writes a daily recap.
-            The CLI is the control plane; the dashboard never signs or submits an order.
-            The market panel uses mainnet reference data; switch it to testnet to see the
-            demo venue.
+            Three autonomous agents trade BTC perps on testnet. The Workers use the
+            CLI's Rust signing core compiled to WebAssembly, record every decision in
+            D1, and expose a read-only feed. Entries also pass through a DeepSeek risk
+            veto, and the model writes a daily recap. The CLI is the control plane; the
+            dashboard never signs or submits an order. The market panel uses mainnet
+            reference data; switch it to testnet to see the demo venue.
           </p>
         </div>
         <div className="flex flex-col items-start gap-2 sm:items-end">
@@ -249,7 +249,7 @@ export default function Dashboard() {
               <ul className="space-y-2 font-mono text-[10.5px]">
                 {[
                   ["agents", "Worker · D1"],
-                  ["execution", "signed REST · testnet"],
+                  ["execution", "CLI core · WASM"],
                   ["markets", "REST · 5s"],
                   ["order book", "WS · live"],
                   ["trades", "WS · live"],

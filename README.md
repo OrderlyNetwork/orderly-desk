@@ -6,7 +6,7 @@
 
 An agentic trading showcase for [Orderly Network](https://orderly.network), built around the [Orderly CLI](https://github.com/OrderlyNetwork/cli).
 
-Three autonomous agents trade BTC perps on **testnet**. The agents run on Cloudflare Workers, sign Orderly REST requests directly, and write every decision to D1. The dashboard is read-only. The CLI is the control plane, and every agent action has a copyable CLI equivalent.
+Three autonomous agents trade BTC perps on **testnet**. The agents run on Cloudflare Workers and use the CLI's Rust signing/request core compiled to WebAssembly. Every decision is written to D1; the dashboard is read-only. The CLI remains the control plane, and every agent action has a copyable CLI command.
 
 The CLI itself runs on **mainnet or testnet**. The demo chooses testnet only so the agents can trade without real funds.
 
@@ -31,9 +31,10 @@ The production Worker cron runs every two minutes. The Pages build uses the Work
 
 ```
 Cloudflare Cron (every 2m)
-  → Worker strategy (momentum / mean-reversion / breakout)
-  → Orderly REST (Ed25519 signed in the Worker)
-  → D1 (runs, decisions, snapshots)
+  → Worker strategy (@orderly-desk/strategies)
+  → AI risk veto
+  → WASM SDK (CLI Rust core) /v1/order
+  → D1 (runs, decisions, snapshots, recaps)
   → read-only Worker API
   → static dashboard
 ```
@@ -56,7 +57,29 @@ Key custody is deliberately split:
 - **Hosted testnet agents** — dedicated testnet API keys in Worker secrets. The browser never sees them.
 - **Manual control** — import the same testnet key into the CLI (`orderly auth-import`) for `positions-list`, `order-cancel-all`, `positions-close`, etc.
 
-The hosted agents do **not** run the Rust CLI binary; Workers cannot exec native binaries. They implement the same Orderly signing protocol in TypeScript. The CLI remains the reference implementation and control plane.
+The hosted agents do **not** run the Rust CLI binary; Workers cannot exec native binaries. They import `@orderly.network/orderly`, the CLI's Rust signing and request core compiled to WebAssembly. The package is generated in the CLI repo under `bindings/js`; the showcase commits a vendored build under `vendor/orderly`. The browser still never sees a key.
+
+## Local agents and strategies
+
+The deterministic strategies live in `packages/strategies` as pure TypeScript:
+momentum, mean reversion, and breakout. They have no Worker or network
+dependencies and can be used from any Node/Bun agent.
+
+The generic skill at `.agents/skills/orderly-trading/` is not tied to a specific
+agent harness. It uses the `orderly` CLI for every read and prints a signal plus
+the exact commands for a confirmed write. Agents that support the
+[agentskills.io](https://agentskills.io) format can load it directly; any other
+agent can run `scripts/signal.mjs` as a normal shell tool.
+
+```bash
+node .agents/skills/orderly-trading/scripts/signal.mjs \
+  --strategy momentum \
+  --symbol PERP_BTC_USDC \
+  --network testnet \
+  --pretty
+```
+
+The script is read-only. It never places, edits, or closes an order.
 
 ## Stack
 
@@ -66,7 +89,8 @@ The hosted agents do **not** run the Rust CLI binary; Workers cannot exec native
 | Charts | TradingView `lightweight-charts` |
 | Market data | Orderly public REST + WebSocket |
 | Agents | Cloudflare Workers + D1 + cron |
-| Signing | `@noble/ed25519`, `@scure/base` |
+| Signing | `@orderly.network/orderly` (CLI Rust core in WebAssembly) |
+| Strategies | `@orderly-desk/strategies` (pure TypeScript) |
 | Local desk | Node bridge → `orderly` CLI (read-only) |
 | Deploy | Cloudflare Pages (site) + Workers (agents) |
 

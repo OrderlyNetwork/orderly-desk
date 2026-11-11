@@ -12,7 +12,8 @@
 ## Live fleet
 
 The showcase runs three autonomous BTC perp agents on Cloudflare Workers. Each has its
-own testnet account and its own D1 decision log. The dashboard is read-only. This file
+own testnet account and its own D1 decision log. The Worker uses the CLI's Rust
+signing/request core compiled to WebAssembly. The dashboard is read-only. This file
 is the manual CLI path: every agent action can be reproduced with the commands below,
 and the same testnet key can be imported into the CLI for manual control.
 

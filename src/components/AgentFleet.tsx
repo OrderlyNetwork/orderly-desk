@@ -40,8 +40,9 @@ export default function AgentFleet({
           </h2>
           {!compact ? (
             <p className="mt-2 max-w-[620px] text-[13px] leading-relaxed text-muted">
-              Workers run the schedules, sign testnet orders, and write every decision to D1.
-              The browser is read-only; each action can be reproduced with the CLI.
+              Workers run the schedules and call the CLI's WASM signing core, then write
+              every decision to D1. The browser is read-only; each action can be
+              reproduced with the CLI.
               {onSelect ? " Select a card to focus the desk on one agent." : ""}
             </p>
           ) : null}

@@ -158,9 +158,9 @@ The `doctor` command is a one-shot diagnostic; the server itself stays on stdio.
 
 ## This showcase
 
-The showcase runs three hosted testnet agents on Cloudflare Workers. They use direct
-Orderly REST signing, not the MCP. The dashboard is a read-only view of the fleet and
-public markets.
+The showcase runs three hosted testnet agents on Cloudflare Workers. They use the
+CLI's Rust signing core compiled to WebAssembly, not the MCP. The dashboard is a
+read-only view of the fleet and public markets.
 
 The MCP is the local path for an agent client that wants the CLI surface as typed
 tools. It is not used by the hosted fleet. Every order in the manual walkthrough was

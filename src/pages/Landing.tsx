@@ -185,9 +185,10 @@ export default function Landing() {
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
             <p className="max-w-[680px] text-[13px] leading-relaxed text-muted">
               The fleet runs on Cloudflare Workers. Each agent has its own testnet account,
-              a cron schedule, and a D1 decision log. Entries are approved or vetoed by a
-              DeepSeek risk officer before signing, and the model writes a daily recap.
-              Select a card to focus the desk. Manual control stays with the CLI.
+              a cron schedule, and a D1 decision log. Signing runs through the CLI's
+              WebAssembly core. Entries are approved or vetoed by a DeepSeek risk officer
+              before signing, and the model writes a daily recap. Select a card to focus
+              the desk. Manual control stays with the CLI.
             </p>
             <Link
               to="/dashboard"
@@ -205,12 +206,12 @@ export default function Landing() {
             <div>
               <div className="eyebrow">How it works</div>
               <h2 className="mt-3.5 text-[clamp(30px,4vw,46px)] font-[620] leading-[1.06] tracking-[-0.04em]">
-                Workers trade. D1 remembers. The CLI controls.
+                Workers orchestrate. WASM signs. The CLI controls.
               </h2>
             </div>
             <p className="max-w-[460px] pb-1.5 text-[15px] leading-[1.65] text-muted">
-              The hosted demo is a second execution path, not a replacement for the CLI.
-              Same Orderly signing protocol, different key custody.
+              The hosted demo uses the CLI's Rust core compiled to WebAssembly.
+              Same signing code as the binary, different key custody.
             </p>
           </div>
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
@@ -223,7 +224,7 @@ export default function Landing() {
               {
                 index: "02",
                 title: "Sign",
-                body: "The Worker builds the exact Orderly request, signs it with Ed25519, and sends it to testnet.",
+                body: "The Worker calls the CLI's Rust core in WebAssembly, which builds and signs the exact Orderly request before sending it to testnet.",
               },
               {
                 index: "03",
