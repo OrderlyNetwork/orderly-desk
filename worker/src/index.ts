@@ -94,6 +94,7 @@ export default {
           accounts: config.accounts.length,
           hasAI: Boolean(env.AI),
           aiModel: AI_MODEL,
+          signing: "cli-wasm",
           tradingEnabled: env.AGENTS_ENABLED !== "0" && env.ORDERLY_NETWORK === "testnet",
           time: new Date().toISOString(),
         });

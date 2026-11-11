@@ -57,6 +57,7 @@ export interface AgentHealth {
   accounts: number;
   hasAI: boolean;
   aiModel?: string;
+  signing?: string;
   tradingEnabled: boolean;
   time: string;
 }
