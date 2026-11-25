@@ -1,9 +1,5 @@
 node_modules/
 dist/
-# The vendored SDK is committed so the standalone showcase can build without
-# a sibling CLI checkout.
-!vendor/orderly/dist/
-!vendor/orderly/dist/**
 .DS_Store
 *.local
 .env

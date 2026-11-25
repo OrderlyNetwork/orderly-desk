@@ -8,7 +8,7 @@
  *
  * Mainnet requires both EXECUTE=1 and CONFIRM_MAINNET=1.
  */
-import { MemorySigner, OrderlyClient } from "@orderly.network/orderly";
+import { MemorySigner, OrderlyClient } from "@orderly.network/cli-wasm";
 import { evaluateStrategy } from "@orderly-desk/strategies";
 
 const network = process.env.ORDERLY_NETWORK === "mainnet" ? "mainnet" : "testnet";

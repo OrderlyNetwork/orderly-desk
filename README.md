@@ -57,7 +57,7 @@ Key custody is deliberately split:
 - **Hosted testnet agents** — dedicated testnet API keys in Worker secrets. The browser never sees them.
 - **Manual control** — import the same testnet key into the CLI (`orderly auth-import`) for `positions-list`, `order-cancel-all`, `positions-close`, etc.
 
-The hosted agents do **not** run the Rust CLI binary; Workers cannot exec native binaries. They import `@orderly.network/orderly`, the CLI's Rust signing and request core compiled to WebAssembly. The package is generated in the CLI repo from `sdk/` and `bindings/wasm`; the showcase commits a vendored build under `vendor/orderly`. The browser still never sees a key.
+The hosted agents do **not** run the Rust CLI binary; Workers cannot exec native binaries. They import `@orderly.network/cli-wasm@2.2.4`, the CLI's Rust signing and request core compiled to WebAssembly and published from the CLI repo. The browser still never sees a key.
 
 ## Local agents and strategies
 
@@ -89,7 +89,7 @@ The script is read-only. It never places, edits, or closes an order.
 | Charts | TradingView `lightweight-charts` |
 | Market data | Orderly public REST + WebSocket |
 | Agents | Cloudflare Workers + D1 + cron |
-| Signing | `@orderly.network/orderly` (CLI Rust core in WebAssembly) |
+| Signing | `@orderly.network/cli-wasm` (CLI Rust core in WebAssembly) |
 | Strategies | `@orderly-desk/strategies` (pure TypeScript) |
 | Local desk | Node bridge → `orderly` CLI (read-only) |
 | Deploy | Cloudflare Pages (site) + Workers (agents) |

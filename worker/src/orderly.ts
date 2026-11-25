@@ -3,7 +3,7 @@ import {
   OrderlyApiError,
   OrderlyClient,
   type Resolution,
-} from "@orderly.network/orderly";
+} from "@orderly.network/cli-wasm";
 import type {
   AgentAccount,
   Candle,

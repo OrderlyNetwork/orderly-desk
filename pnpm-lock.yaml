@@ -175,9 +175,9 @@ importers:
       '@orderly-desk/strategies':
         specifier: workspace:*
         version: link:packages/strategies
-      '@orderly.network/orderly':
-        specifier: file:vendor/orderly
-        version: file:vendor/orderly
+      '@orderly.network/cli-wasm':
+        specifier: 2.2.4
+        version: 2.2.4
       lightweight-charts:
         specifier: ^5.2.1
         version: 5.2.1
@@ -719,8 +719,8 @@ packages:
     resolution: {integrity: sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==}
     engines: {node: '>= 16'}
 
-  '@orderly.network/orderly@file:vendor/orderly':
-    resolution: {directory: vendor/orderly, type: directory}
+  '@orderly.network/cli-wasm@2.2.4':
+    resolution: {integrity: sha512-s62xypD2ckTjzydqzyIJjJh+5fWVObcexdjvXkl3AUWYpk2WHTxzQbGeZAjCmtcDH8NUcHqp+HTp+lZRjJ30Ag==}
     engines: {node: '>=18'}
 
   '@poppinss/colors@4.1.6':
@@ -1785,7 +1785,7 @@ snapshots:
 
   '@noble/hashes@1.3.2': {}
 
-  '@orderly.network/orderly@file:vendor/orderly': {}
+  '@orderly.network/cli-wasm@2.2.4': {}
 
   '@poppinss/colors@4.1.6':
     dependencies:
