@@ -39,7 +39,8 @@ const footerColumns: Array<{ title: string; links: FooterLink[] }> = [
     title: "Orderly",
     links: [
       { label: "Orderly Network", href: "https://orderly.network" },
-      { label: "Dashboard", href: "https://dashboard.orderly.network" },
+      { label: "Testnet dashboard", href: "https://testnet-orderly-dashboard.orderly.network" },
+      { label: "Mainnet dashboard", href: "https://dashboard.orderly.network" },
       { label: "Docs", href: "https://orderly.network/docs" },
       { label: "CLI on GitHub", href: "https://github.com/OrderlyNetwork/cli" },
     ],

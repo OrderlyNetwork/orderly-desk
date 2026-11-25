@@ -323,13 +323,17 @@ export async function getAgentStates(env: Env, force = false): Promise<AgentStat
   const nextCronAt = (ms: number) => Math.ceil(Math.max(ms, now) / CRON_INTERVAL_MS) * CRON_INTERVAL_MS;
   const nextRunAt = (agent: AgentRow) =>
     nextCronAt((agent.last_run_at ?? now) + agent.interval_minutes * 60_000);
+  const dashboardBase =
+    env.ORDERLY_NETWORK === "testnet"
+      ? "https://testnet-orderly-dashboard.orderly.network"
+      : "https://dashboard.orderly.network";
   const dashboardUrl = (account: AgentAccount) => {
     if (!account.address || !account.brokerId || account.userId == null) return null;
     const query = new URLSearchParams({
       broker_id: account.brokerId,
       user_id: String(account.userId),
     });
-    return `https://dashboard.orderly.network/address/${account.address}?${query.toString()}`;
+    return `${dashboardBase}/address/${account.address}?${query.toString()}`;
   };
 
   const states = await Promise.all(
