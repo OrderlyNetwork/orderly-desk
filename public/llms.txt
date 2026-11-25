@@ -25,7 +25,7 @@
 
 ## Versions
 
-- orderly: 2.1.2 (walkthrough verified with 2.1.2)
-- trading-mcp: 0.2.3
+- orderly: 2.2.4 (walkthrough verified with 2.1.2)
+- trading-mcp: 0.2.4
 - MCP registry: 0.2.1 (active)
-- checked: 2026-11-11
+- checked: 2026-11-25

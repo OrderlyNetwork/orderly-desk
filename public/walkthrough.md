@@ -4,10 +4,10 @@
 > agent-oriented version of the `/walkthrough` page, generated from
 > `src/content/agent-walkthrough.md`. Do not edit the copy in `public/` by hand.
 
-- CLI: **orderly 2.1.2** (verified with 2.1.2)
+- CLI: **orderly 2.2.4** (verified with 2.1.2)
 - Live fleet: three hosted testnet agents on Workers; see `/dashboard`
-- MCP alternative: **@orderly.network/trading-mcp 0.2.3**
-- Last checked: 2026-11-11
+- MCP alternative: **@orderly.network/trading-mcp 0.2.4**
+- Last checked: 2026-11-25
 
 ## Live fleet
 
@@ -32,7 +32,7 @@ and the same testnet key can be imported into the CLI for manual control.
 ```sh
 curl -fsSL https://raw.githubusercontent.com/OrderlyNetwork/cli/master/install.sh | sh
 orderly --version
-# orderly 2.1.2
+# orderly 2.2.4
 ```
 
 Output is compact JSON by default. Add `--pretty` for humans or `--csv` for

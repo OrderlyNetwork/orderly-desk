@@ -15,11 +15,11 @@ MCP client ⇄ stdio ⇄ orderly-trading-mcp ⇄ execFile ⇄ orderly CLI ⇄ Or
 The MCP process never sees private keys and never signs. It discovers the CLI
 schema, validates arguments, applies policy, and runs the CLI as a subprocess.
 
-- npm: 0.2.3 — https://www.npmjs.com/package/@orderly.network/trading-mcp
+- npm: 0.2.4 — https://www.npmjs.com/package/@orderly.network/trading-mcp
 - Official MCP registry: io.github.OrderlyNetwork/trading-mcp
   — listing 0.2.1 — https://registry.modelcontextprotocol.io/
-- CLI: orderly 2.1.2 (this showcase was verified with 2.1.2)
-- Last checked: 2026-11-11
+- CLI: orderly 2.2.4 (this showcase was verified with 2.1.2)
+- Last checked: 2026-11-25
 
 The registry listing can lag npm. Install from npm for the latest release.
 
